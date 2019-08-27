@@ -1,0 +1,40 @@
+extends memberTitle
+
+block contentArea
+    #homeBd
+        if !post
+            div#noPostDiv
+                img(src="/img/wonsta.jpg")
+                br
+                span 게시물 없음
+        else
+            table#postTb
+                forEach(begin="0" end="${posts.size()-1}" step="3" varStatus="status")
+                    tr
+                        td.postTd(align="center")
+                            if test="${posts.size()-1 >= status.current}"
+                                a.postATagposts.get(status.current).wp_no(href="post.show?wp_id=${posts.get(status.current).wp_id}&wp_no=${posts.get(status.current).wp_no}")
+                                    img#postImg(src="/img/${posts.get(status.current).wp_img}")
+                                    div.middle ♥
+                                        span.likeCntSpan 0
+                                        p 개  ☆
+                                        span.repleCntSpan 0
+                                        p 개
+                        td.postTd(align="center")
+                            if test="${posts.size()-1 >= status.current+1}"
+                                a.postATagposts.get(status.current+1).wp_no(href="post.show?wp_id=${posts.get(status.current+1).wp_id}&wp_no=${posts.get(status.current+1).wp_no}")
+                                    img#postImg(src="resources/img/${posts.get(status.current+1).wp_img}")
+                                    div.middle ♥
+                                        span.likeCntSpan 0
+                                        p 개  ☆
+                                        span.repleCntSpan 0
+                                        p 개
+                        td.postTd(align="center")
+                            if test="${posts.size()-1 >= status.current+2}"
+                                a.postATagposts.get(status.current+2).wp_no(href="post.show?wp_id=${posts.get(status.current+2).wp_id}&wp_no=${posts.get(status.current+2).wp_no}")
+                                    img#postImg(src="resources/img/${posts.get(status.current+2).wp_img}")
+                                    div.middle ♥
+                                        span.likeCntSpan 0
+                                        p 개  ☆
+                                        span.repleCntSpan 0
+                                        p 개
