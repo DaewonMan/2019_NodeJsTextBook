@@ -22,10 +22,10 @@ function checkRepleCnt(postNum) {
 }
 
 function postDeleteDo(no) {
-	var ok = confirm("°Ô½Ã¹°À» »èÁ¦ÇÕ´Ï±î?");
+	var ok = confirm("ï¿½Ô½Ã¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï±ï¿½?");
 	
 	if(ok) {
-		// °Ô½Ã¹° »èÁ¦
+		// ï¿½Ô½Ã¹ï¿½ ï¿½ï¿½ï¿½ï¿½
 		$.ajax({
 			url: "post.delete",
 			type:"post",
@@ -35,7 +35,7 @@ function postDeleteDo(no) {
 					//$(".postATag"+ no).remove();
 					location.href = "home.go";
 				} else {
-					alert("°Ô½Ã¹° »èÁ¦ ½ÇÆĞ!!");
+					alert("ï¿½Ô½Ã¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!!");
 				}
 			}
 		});
@@ -43,21 +43,21 @@ function postDeleteDo(no) {
 }
 
 function repleDeleteDo(no, pNo) {
-	var ok = confirm("´ñ±ÛÀ» »èÁ¦ÇÕ´Ï±î?");
+	var ok = confirm("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï±ï¿½?");
 	
 	if(ok) {
-		// ¸®ÇÃ »èÁ¦
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		$.ajax({
 			url: "reple.delete",
 			type:"post",
 			data: {wr_no: no}, 
 			success: function(result){
 				if(result == "OK") {
-					//alert("´ñ±ÛÀÌ »èÁ¦ µÇ¾ú½À´Ï´Ù!");
+					//alert("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
 					checkRepleCnt(pNo);
 					$(".eachReples"+ no).remove();
 				} else {
-					alert("´ñ±Û »èÁ¦ ½ÇÆĞ!!");
+					alert("ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!!");
 				}
 			}
 		});
@@ -71,7 +71,7 @@ function postCheck() {
 	var imgField = document.postForm.wp_img;
 	
 	if(isEmpty(titleField)) {
-		alert("¹®±¸ ´Ù½Ã");
+		alert("ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½");
 		titleField.value = "";
 		titleField.focus();
 		return false;
@@ -79,7 +79,7 @@ function postCheck() {
 				&& isNotType(imgField, "png")
 				&& isNotType(imgField, "gif")
 				&& isNotType(imgField, "jpeg")) {
-		alert("ÀÌ¹ÌÁö ´Ù½Ã");
+		alert("ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½");
 		imgField.value = "";
 		imgField.focus();
 		return false;
@@ -88,7 +88,7 @@ function postCheck() {
 	return true;
 }
 
-// ÆÈ·Î¿ì ¿©ºÎ¿¡ µû¶ó °Ô½Ã¹° Çã¿ë
+// ï¿½È·Î¿ï¿½ ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô½Ã¹ï¿½ ï¿½ï¿½ï¿½
 function followOrNot2(id, me){
 	
 	$.ajax({
@@ -98,20 +98,65 @@ function followOrNot2(id, me){
 			var cnt = $(xml).find('follow').length;
 			//alert(cnt);	
 			if(cnt > 0) {
-				$('#noPostDiv2').remove(); // ÇØ´çÅÂ±× »èÁ¦
-				$('#postTb').show(); // °Ô½Ã¹° ¸ñ·Ï Ç¥½Ã
-				$('#noPostDiv').show(); // °Ô½Ã¹° ¾øÀ½ Ç¥½Ã
+				$('#noPostDiv2').remove(); // ï¿½Ø´ï¿½ï¿½Â±ï¿½ ï¿½ï¿½ï¿½ï¿½
+				$('#postTb').show(); // ï¿½Ô½Ã¹ï¿½ ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
+				$('#noPostDiv').show(); // ï¿½Ô½Ã¹ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
 			} else {
-				$('#postTb').hide(); // °Ô½Ã¹° ¸ñ·Ï ¼û±â±â
-				$('#noPostDiv').hide(); // °Ô½Ã¹° ¾øÀ½ Ç¥½Ã ¼û±â±â
+				$('#postTb').hide(); // ï¿½Ô½Ã¹ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+				$('#noPostDiv').hide(); // ï¿½Ô½Ã¹ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 				//nonOpenDiv.show();
 				
 				var nonOpenDiv = $('<div></div>').attr('id', 'noPostDiv2');
 				var nonOpenImg = $('<img></img>').attr('src', 'resources/img/wonsta.jpg');
-				var nonOpenSpan = $('<span></span>').text('ºñ°ø°³!');
+				var nonOpenSpan = $('<span></span>').text('ï¿½ï¿½ï¿½ï¿½ï¿½!');
 				nonOpenDiv.append(nonOpenImg, '<p>', nonOpenSpan);
 				$('.mainCttTd').append(nonOpenDiv);
 			}
 		}		
 	});	
 }
+
+$(function(){
+	// ê²Œì‹œë¬¼ ë“±ë¡ ì‹œ, ì´ë¯¸ì§€ ì—…ë¡œë“œí•  ë•Œ 
+    if (document.getElementById('imgs')) {
+        document.getElementById('imgs').addEventListener('change', function (e) {
+          var formData = new FormData();
+          console.log(this, this.files);
+          formData.append('img', this.files[0]);
+          //console.log(this.files[0]);
+          //console.log(formData);
+          var xhr = new XMLHttpRequest();
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              var url = JSON.parse(xhr.responseText).url;
+              document.getElementById('imgUrl').value = url;
+              document.getElementById('imgPreview').src = url;
+              document.getElementById('imgPreview').style.display = 'inline';
+            } else {
+              console.error(xhr.responseText);
+            }
+          };
+          xhr.open('POST', '/post/img');
+          xhr.send(formData);
+        });
+	}
+	
+	$(".postUploadInputTd").each(function(e, c){
+		var child = $(c).children();
+		child.focus(function(){
+			$(this).css("border", "1px solid #9E9E9E");
+		});
+		child.focusout(function(){
+			$(this).css("border", "1px solid #E0E0E0");
+		});
+	});
+
+	/*ê²Œì‹œë¬¼ ì˜¬ë¦¬ê¸° border*/
+	$("#postUploadTb").focusin(function(){
+		 $(this).css("border", "3px solid #795548");
+	});
+	$("#postUploadTb").focusout(function(){
+		$(this).css("border", "1px solid #E0E0E0");
+	});
+	
+});

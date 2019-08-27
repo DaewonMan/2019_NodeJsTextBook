@@ -80,4 +80,36 @@ router.get('/hashtag', async (req, res, next) => {
   }
 });
 
+// /post/go
+router.get('/go', (req, res) => {
+  if(req.user) {
+    res.render('post', {
+      title: 'MySnsProject',
+      twits: [],
+      user: req.user,
+      waveUser: req.user,
+      testError: req.flash('testError'),
+    });
+  } else {
+    return res.redirect('/login');
+  }
+});
+
+/* 게시물을 디비에 삽입 */
+const upload = multer();
+router.post('/do', isLoggedIn, upload.none(), async (req, res, next) => {
+  try {
+    await Post.create({
+      title: req.body.title,
+      hashtag: req.body.hashtag,
+      img: req.body.url,
+    });
+    req.flash('postSuccess', '게시물이 등록 되었습니다.');
+    return res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
 module.exports = router;
