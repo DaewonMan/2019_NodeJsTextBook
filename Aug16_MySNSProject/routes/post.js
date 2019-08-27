@@ -96,13 +96,15 @@ router.get('/go', (req, res) => {
 });
 
 /* 게시물을 디비에 삽입 */
-const upload = multer();
-router.post('/do', isLoggedIn, upload.none(), async (req, res, next) => {
+const upload3 = multer();
+router.post('/do', isLoggedIn, upload3.none(), async (req, res, next) => {
   try {
     await Post.create({
-      title: req.body.title,
-      hashtag: req.body.hashtag,
-      img: req.body.url,
+      wp_id: req.user.wm_id,
+      wp_title: req.body.wp_title,
+      wp_hash: req.body.wp_hash,
+      wp_img: req.body.url,
+      wp_likenum: "0",
     });
     req.flash('postSuccess', '게시물이 등록 되었습니다.');
     return res.redirect('/');
@@ -110,6 +112,34 @@ router.post('/do', isLoggedIn, upload.none(), async (req, res, next) => {
     console.error(error);
     return next(error);
   }
+});
+
+/* 게시물 보기 */
+router.get('/show', async (req, res, next) => {
+  //console.log(req.user);
+  if(req.user) {
+      var waveUser = req.user;
+      var wm_id = req.query.wave_id;
+      var wp_id = req.user.wm_id;
+      var posts;
+      if(wm_id != null) {
+          wp_id = req.query.wave_id; // 파도탄 인원의 아이디로 변경
+          waveUser = await User.findOne({ where: { wm_id } }); // 파도탄 인원 정보
+      }
+      posts = await Post.findAll({ where: { wp_id } });
+      
+      res.render('postDetail', {
+          title: 'MySnsProject',
+          twits: [],
+          user: req.user,
+          waveUser: waveUser,
+          post: posts,
+          loginError: req.flash('postDetailError'),
+      });
+  } else {
+      return res.redirect('/login');
+  }
+  
 });
 
 module.exports = router;

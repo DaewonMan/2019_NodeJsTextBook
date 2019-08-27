@@ -1,11 +1,23 @@
 module.exports = (sequelize, DataTypes) => (
     sequelize.define('post', {
-      content: {
-        type: DataTypes.STRING(140),
+      wp_id: {
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
-      img: {
+      wp_title: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+      wp_hash: {
         type: DataTypes.STRING(200),
+        allowNull: true,
+      },
+      wp_img: {
+        type: DataTypes.STRING(200),
+        allowNull: true,
+      },
+      wp_likenum: {
+        type: DataTypes.STRING(10),
         allowNull: true,
       },
     }, {

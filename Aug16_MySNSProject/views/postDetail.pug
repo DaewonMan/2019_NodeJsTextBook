@@ -1,0 +1,58 @@
+extends contentArea
+    body#postDetailBD
+        table.df
+            tr
+                td(colspan="2" align="right" class="postDetailbtnTd")
+                    button(onclick="goToMemberDisplay('${waveMember.wm_id}', '${loginMember.wm_id }');") x
+            tr
+                td.postDetailImgTd(align="center")
+                    img(src="resources/img/${postDetails.wp_img }")
+                td(valign="top" align="center" class="postDetailDescTd")
+                    table#postDetailDescTb
+                        tr.DescTitleTr
+                            td(align="center")
+                                img(src="resources/img/${waveMember.wm_img }")
+                td.DescIdTd ${postDetails.wp_id }
+                td.DeletePostTd(align="right")
+                    if loginMember.wm_id == waveMember.wm_id
+                        img#trashImg(src="resources/img/trash1.jpg" onclick="postDeleteDo(${postDetails.wp_no });")
+            tr
+                td(colspan="3" align="right" class="DescDateTd")
+                    div #{prettyDate(post.createdAt)}
+            tr
+                td(colspan="3" class="DescTitleTd" align="center")= post.wp_title
+            tr
+                td(colspan="3" class="DescHashTd" align="center")= post.wp_hash
+            tr
+                td(colspan="3" class="DescLikeTd")
+                    span(class="likeBtn")="♡   "
+                    span(class="commentBtn") ☆
+                    br 좋아요
+                    span(class="likeCnt")= "개 댓글"
+                    span(class="commentCnt") 개
+            tr
+                td(colspan="3" valign="top" class="DescRShowTd")
+                    div.DescRShowDiv
+                        each r in reples
+                            div(class="eachReples${r.wr_no }")
+                                span.DescRShowId ${r.wr_id} :
+                                    span.DescRShowRep ${r.wr_reple}
+                                if r.wr_id ==  loginMember.wm_id
+                                    span.repleXBtn(onclick="repleDeleteDo(${r.wr_no}, ${r.wr_rno });")="    x"
+                                    p
+            tr
+                td(colspan="3" class="DescRepleTd")
+                    form(action="post.reple.do")
+                        textarea#repleArea(name="wr_reple" placeholder="댓글 달기..." )
+                        input(name="wr_rno" value="${postDetails.wp_no }" style="display:none;")
+                        input#repleBtn(type="submit" style="display:none;")
+        script.
+            function prettyDate(dateString){
+                //if it's already a date object and not a string you don't need this line:
+                var date = new Date(dateString);
+                var d = date.getDate();
+                var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+                var m = monthNames[date.getMonth()];
+                var y = date.getFullYear();
+                return d+' '+m+' '+y;
+            }

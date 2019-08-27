@@ -9,32 +9,28 @@ block contentArea
                 span 게시물 없음
         else
             table#postTb
-                forEach(begin="0" end="${posts.size()-1}" step="3" varStatus="status")
+                each pst, index in post
+                    if (index % 3 != 0)
+                        - continue
                     tr
                         td.postTd(align="center")
-                            if test="${posts.size()-1 >= status.current}"
-                                a.postATagposts.get(status.current).wp_no(href="post.show?wp_id=${posts.get(status.current).wp_id}&wp_no=${posts.get(status.current).wp_no}")
-                                    img#postImg(src="/img/${posts.get(status.current).wp_img}")
-                                    div.middle ♥
-                                        span.likeCntSpan 0
-                                        p 개  ☆
-                                        span.repleCntSpan 0
-                                        p 개
+                            if post.length-1 >= index
+                                a(class="postATag" + post[index].id href="/post/show?id=" + post[index].id + "&wp_id=" + post[index].wp_id)
+                                    img#postImg(src=post[index].wp_img)
+                                    div.middle="♥ "
+                                        span.likeCntSpan= "0 개  ☆ "
+                                        span.repleCntSpan 0 개
                         td.postTd(align="center")
-                            if test="${posts.size()-1 >= status.current+1}"
-                                a.postATagposts.get(status.current+1).wp_no(href="post.show?wp_id=${posts.get(status.current+1).wp_id}&wp_no=${posts.get(status.current+1).wp_no}")
-                                    img#postImg(src="resources/img/${posts.get(status.current+1).wp_img}")
-                                    div.middle ♥
-                                        span.likeCntSpan 0
-                                        p 개  ☆
-                                        span.repleCntSpan 0
-                                        p 개
+                            if post.length-1 >= index+1
+                                a(class="postATag" + post[index+1].id href="/post/show?id=" + post[index+1].id + "&wp_id=" + post[index+1].wp_id)
+                                    img#postImg(src=post[index+1].wp_img)
+                                    div.middle="♥ "
+                                        span.likeCntSpan= "0 개  ☆ "
+                                        span.repleCntSpan 0 개
                         td.postTd(align="center")
-                            if test="${posts.size()-1 >= status.current+2}"
-                                a.postATagposts.get(status.current+2).wp_no(href="post.show?wp_id=${posts.get(status.current+2).wp_id}&wp_no=${posts.get(status.current+2).wp_no}")
-                                    img#postImg(src="resources/img/${posts.get(status.current+2).wp_img}")
-                                    div.middle ♥
-                                        span.likeCntSpan 0
-                                        p 개  ☆
-                                        span.repleCntSpan 0
-                                        p 개
+                            if post.length-1 >= index+2
+                                a(class="postATag" + post[index+2].id href="/post/show?id=" + post[index+2].id + "&wp_id=" + post[index+2].wp_id)
+                                    img#postImg(src=post[index+2].wp_img)
+                                    div.middle="♥ "
+                                        span.likeCntSpan= "0 개  ☆ "
+                                        span.repleCntSpan 0 개
