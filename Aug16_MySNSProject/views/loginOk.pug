@@ -19,6 +19,8 @@ html
         script(src="/js/validCheck.js")
         script(src="/js/loginOk.js")
         script(src="/js/memberTitle.js")
+        script(src="/js/postDetail.js")
+        script(src="/js/contentArea.js")
     body#loBd
         table#mainTb
             tr#mainTbFistTr
@@ -31,7 +33,7 @@ html
                             td.cttHeadTd2(align="center")
                                 input#searchInfo(placeholder="검  색")
                             td.cttHeadTd2(align="right")
-                                div#cttHeadDiv2(align="right")=waveUser.wm_name + ' 님 환영!'			
+                                div#cttHeadDiv2(align="right")=user.wm_name + ' 님 환영!'			
                                 div#cttHeadDiv(align="right")
                                     button(onclick="logoutDo();") 로그아웃
                                     button(onclick="updateDo();") 정보수정
@@ -45,3 +47,7 @@ html
         if user.wm_id == waveUser.wm_id
             div#bottomMenuDv(align="center")
                 div#addPostDiv 게시물 추가하기
+        if postDetail != null
+            <div id="showPostDiv">
+                block postDetail
+            </div>

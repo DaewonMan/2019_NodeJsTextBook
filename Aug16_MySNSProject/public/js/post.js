@@ -1,26 +1,29 @@
 function goToMemberDisplay(id, me){
 	if(id == me) {
-		location.href = "home.go";				
+		alert("same?");
+		location.href = "/";				
 	} else {
-		location.href = "follow.wave?wm_id="+id;		
+		//location.href = "follow.wave?wm_id="+id;
+		location.href = "/user/wave?wave_id="+id;	
 	}
 }
-
+/*
 function checkRepleCnt(postNum) {
 	$.ajax({
-		url: "reple.count",
+		url: "/post/reple/count",
 		data: {wr_rno: postNum},
 		success: function(xml){
 			$(".commentCnt").empty();
 			var cnt = 0;
 			$(xml).find("reple").each(function(e){
-				cnt = e + 1;
+				//cnt = e + 1;
+				cnt++;
 			});
 			$(".commentCnt").text(cnt);
 		}
 	});
 }
-
+*/
 function postDeleteDo(no) {
 	var ok = confirm("�Խù��� �����մϱ�?");
 	

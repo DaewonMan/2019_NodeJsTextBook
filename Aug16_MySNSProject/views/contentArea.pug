@@ -2,7 +2,7 @@ extends memberTitle
 
 block contentArea
     #homeBd
-        if !post
+        if post.length == 0
             div#noPostDiv
                 img(src="/img/wonsta.jpg")
                 br
@@ -15,22 +15,34 @@ block contentArea
                     tr
                         td.postTd(align="center")
                             if post.length-1 >= index
-                                a(class="postATag" + post[index].id href="/post/show?id=" + post[index].id + "&wp_id=" + post[index].wp_id)
+                                a(class="postATag" + post[index].id href="/post/show?id=" + post[index].id + "&wp_id=" + post[index].wp_id + "&wave_id=" + waveUser.wm_id)
                                     img#postImg(src=post[index].wp_img)
-                                    div.middle="♥ "
-                                        span.likeCntSpan= "0 개  ☆ "
-                                        span.repleCntSpan 0 개
+                                    div.middle
+                                        = "♥ "
+                                        span.likeCntSpan
+                                        = " 개  ☆ "
+                                        span.repleCntSpan
+                                        = " 개"
+                                        input(value=post[index].id style="display:none;")
                         td.postTd(align="center")
                             if post.length-1 >= index+1
-                                a(class="postATag" + post[index+1].id href="/post/show?id=" + post[index+1].id + "&wp_id=" + post[index+1].wp_id)
+                                a(class="postATag" + post[index+1].id href="/post/show?id=" + post[index+1].id + "&wp_id=" + post[index+1].wp_id + "&wave_id=" + waveUser.wm_id)
                                     img#postImg(src=post[index+1].wp_img)
-                                    div.middle="♥ "
-                                        span.likeCntSpan= "0 개  ☆ "
-                                        span.repleCntSpan 0 개
+                                    div.middle
+                                        = "♥ "
+                                        span.likeCntSpan
+                                        = " 개  ☆ "
+                                        span.repleCntSpan
+                                        = " 개"
+                                        input(value=post[index+1].id style="display:none;")
                         td.postTd(align="center")
                             if post.length-1 >= index+2
-                                a(class="postATag" + post[index+2].id href="/post/show?id=" + post[index+2].id + "&wp_id=" + post[index+2].wp_id)
+                                a(class="postATag" + post[index+2].id href="/post/show?id=" + post[index+2].id + "&wp_id=" + post[index+2].wp_id + "&wave_id=" + waveUser.wm_id)
                                     img#postImg(src=post[index+2].wp_img)
-                                    div.middle="♥ "
-                                        span.likeCntSpan= "0 개  ☆ "
-                                        span.repleCntSpan 0 개
+                                    div.middle
+                                        = "♥ "
+                                        span.likeCntSpan
+                                        = " 개  ☆ "
+                                        span.repleCntSpan
+                                        = " 개"
+                                        input(value=post[index+2].id style="display:none;")
