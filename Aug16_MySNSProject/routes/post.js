@@ -81,13 +81,18 @@ router.get('/hashtag', async (req, res, next) => {
 });
 
 // /post/go
-router.get('/go', (req, res) => {
+router.get('/go', async (req, res) => {
   if(req.user) {
+    var wp_id = req.user.wm_id;
+    var posts;
+    
+    posts = await Post.findAll({ where: { wp_id } });
     res.render('post', {
       title: 'MySnsProject',
       twits: [],
       user: req.user,
       waveUser: req.user,
+      post: posts,
       testError: req.flash('testError'),
     });
   } else {
@@ -202,9 +207,51 @@ router.get('/like/count', isLoggedIn, async (req, res, next) => {
     var xmlResult = '<?xml version="1.0" encoding="UTF-8"?>' ;
     xmlResult += '<likes>';
     for (var i = 0;i < exLikebool.length;i++) {
-      if (exLikebool[i].wlb_bool)
+      if (exLikebool[i].wlb_bool == 1) {
+        console.log(exLikebool[i].wlb_bool + "fdsfsdf");
         xmlResult += '<like>exist</like>';
+      }
     }
+    xmlResult += '</likes>';
+
+    return res.json(xmlResult);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
+/*
+wlb_no: pno,
+wlb_bool: likeCnt,
+wlb_id: id
+*/
+/* 좋아요 업데이트 */
+router.get('/like/update', isLoggedIn, async (req, res, next) => {
+  try {
+    var likeCnt = req.query.wlb_bool;
+    var id = req.query.wlb_id;
+    var pno = req.query.wlb_pno;
+    var realLikeBool = 0;
+
+    const exLikebool = await Likebool.findOne({ where: { wlb_id: id, wlb_pno: pno } });
+
+    if (!exLikebool) {
+      await Likebool.create({
+        wlb_id: id,
+        wlb_pno: pno,
+        wlb_bool: likeCnt,
+      });
+    } else if(likeCnt == 0){
+      realLikeBool = exLikebool.wlb_bool;
+    } else {
+      await Likebool.update({wlb_bool: likeCnt}, {where: { wlb_id: id, wlb_pno: pno }});
+      realLikeBool = likeCnt;
+    }
+
+    var xmlResult = '<?xml version="1.0" encoding="UTF-8"?>' ;
+    xmlResult += '<likes>';
+    xmlResult += '<like><wlb_bool>' + realLikeBool + '</wlb_bool></like>';
     xmlResult += '</likes>';
 
     return res.json(xmlResult);

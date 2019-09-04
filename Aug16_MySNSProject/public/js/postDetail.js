@@ -1,21 +1,28 @@
-$(function(){
-    //var postNum = "<%- postDetail.id %>"; // 게시물 번호
-    var likeCnt = 0; // 좋아요 여부
-    //var mId = "<%- user.wm_id %>";
-    var likeBool = "";
-    //var userId = "<%- user.wm_id %>";
-    // 리플 수
-    //checkRepleCnt(postNum);		
-    
-    /*
-    // 게시물 눌렀을 때 좋아요 갯수; likeCnt는 0이 들어감
+/* 좋아요 갯수 출력 */
+function likeCntShow(pno) {
     $.ajax({
-        url: "like.update",
-        data: {wp_no: postNum, wp_like: likeCnt, wlb_id: mId, wlb_pno: postNum, wlb_bool: likeCnt},
+        url: "/post/like/count",
+        data: {wlb_pno: pno},
+        success: function(xml){
+            $(".likeCnt").empty();
+            $(".likeCnt").text($(xml).find("like").length);
+        }
+    });
+}
+/* 좋아요 수정 */
+function likeUpdate(pno, likeCnt, id) {
+    var likeBool = "";
+    $.ajax({
+        url: "/post/like/update",
+        data: {
+                wlb_pno: pno,
+                wlb_bool: likeCnt,
+                wlb_id: id
+        },
         success: function(xml){
             
             // 하트여부
-            likeBool = $(xml).find("likebool").find("wlb_bool").text();
+            likeBool = $(xml).find("like").find("wlb_bool").text();
             if(likeBool != ""){
                 likeBool *= 1;						
             }
@@ -25,21 +32,22 @@ $(function(){
             } else {
                 $(".likeBtn").text("♡");
                 $(".likeBtn").css("color", "black");
-            }					
+            }
+            
+            // 게시물 자세히 보기에서 좋아요 갯수 출력
+            likeCntShow(pno);					
         }
     });
+}
+
+$(function(){
+    var pno = $('#replePnoArea').val(); // 게시물 번호
+    var likeCnt = 0; // 좋아요 여부
+    var id = $('#repleIdArea').val(); // user.wm_id, 사용자 아이디
     
-    // 좋아요 갯수
-    $.ajax({
-        url: "like.cnt",
-        data: {wp_no: postNum},
-        success: function(xml){
-            $(".likeCnt").empty();
-            var cnt = $(xml).find("post").find("wp_like").text();
-            $(".likeCnt").text(cnt);
-        }
-    });
-    */
+    // 게시물 눌렀을 때 좋아요 갯수; likeCnt는 0이 들어감
+    likeUpdate(pno, likeCnt, id);
+ 
     /*============================================================*/
     
     // 댓글 추가하기
@@ -49,8 +57,6 @@ $(function(){
             //$("#repleBtn").trigger("click");
             //post.reple.do
             // 댓글 달기
-            var id = $('#repleIdArea').val();
-            var pno = $('#replePnoArea').val();;
             var reple = $("#repleArea").val();
             $.ajax({
                 url: "/post/reple/do",
@@ -103,31 +109,12 @@ $(function(){
     $(".likeBtn").click(function(){
         var hrt = $(this).text();
         if(hrt == "♡") {
-            $(this).text("♥");
-            $(this).css("color", "#D50000");
             likeCnt = 1;
         } else {
-            $(this).text("♡");
-            $(this).css("color", "black");
             likeCnt = -1;
         }
         // 좋아요 버튼 누른 후 좋아요 갯수; likeCnt는 1 or -1이 들어감
-        $.ajax({
-            url: "like.update",
-            data: {wp_no: postNum, wp_like: likeCnt, wlb_id: mId, wlb_pno: postNum, wlb_bool: likeCnt},
-            success: function(){
-                // 좋아요 갯수
-                $.ajax({
-                    url: "like.cnt",
-                    data: {wp_no: postNum},
-                    success: function(xml){
-                        $(".likeCnt").empty();
-                        var cnt = $(xml).find("post").find("wp_like").text();
-                        $(".likeCnt").text(cnt);
-                    }
-                });
-            }
-        });
+        likeUpdate(pno, likeCnt, id);
     });
     
     // 좋아요 클릭시 크기 변화

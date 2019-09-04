@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => (
       wlb_id: { // 좋아요 한 사람
         type: DataTypes.STRING(100),
         allowNull: false,
-        unique: true,
       },
       wlb_bool: { // 좋아요 여부
         type: DataTypes.INTEGER(2),

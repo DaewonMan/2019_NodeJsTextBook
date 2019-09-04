@@ -20,10 +20,10 @@ function followBtnOper(yourId, myId, yesOrNo, waverOpen) {
 }
 
 $(function(){
-    var myId = '${loginMember.wm_id }';
-    var yourId = '${waveMember.wm_id }';
-    var waverOpen = "${waveMember.wm_open}";
-    
+    var myId = $("#mainUserID").val();
+    var yourId = $("#mainwaveID").val();
+    //var waverOpen = "${waveMember.wm_open}";
+
     /*
     // 팔로우 신청을 여부
     if(followWaitOrNot(yourId, myId) == 0) {

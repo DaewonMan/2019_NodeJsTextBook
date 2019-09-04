@@ -38,6 +38,8 @@ html
                                     button(onclick="logoutDo();") 로그아웃
                                     button(onclick="updateDo();") 정보수정
                                     button(onclick="deleteDo();") 회원삭제
+                                    input#mainUserID(value=user.wm_id style="display:none;")
+                                    input#mainWaveId(value=waveUser.wm_id style="display:none;")
             tr
                 td#mainTitle(align="center")
                     block memberTitle

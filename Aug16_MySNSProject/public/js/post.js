@@ -1,3 +1,4 @@
+/* 게시물 보고 난 뒤, x 닫기를 눌러 메인화면으로 갈때, 사용자와 파도탄 인원 비교 */
 function goToMemberDisplay(id, me){
 	if(id == me) {
 		alert("same?");
@@ -7,23 +8,9 @@ function goToMemberDisplay(id, me){
 		location.href = "/user/wave?wave_id="+id;	
 	}
 }
-/*
-function checkRepleCnt(postNum) {
-	$.ajax({
-		url: "/post/reple/count",
-		data: {wr_rno: postNum},
-		success: function(xml){
-			$(".commentCnt").empty();
-			var cnt = 0;
-			$(xml).find("reple").each(function(e){
-				//cnt = e + 1;
-				cnt++;
-			});
-			$(".commentCnt").text(cnt);
-		}
-	});
-}
-*/
+
+//============================================================================================================
+
 function postDeleteDo(no) {
 	var ok = confirm("�Խù��� �����մϱ�?");
 	

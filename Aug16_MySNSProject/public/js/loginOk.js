@@ -63,22 +63,6 @@ $(function(){
         $("#addPostDiv").css("color","#333333");
     });
     
-    /*
-    // 총 게시물 수
-    $.ajax({
-        url: "post.count",
-        data: {wp_id: yourId},
-        success: function(xml){
-            //$("table").empty(); // 반복문 돌기전에 테이블안에 있는거 지우기
-            $("#postCntSpan").empty();
-            var cnt = 0;
-            $(xml).find("post").each(function(e){
-                cnt = e + 1;
-            });
-            $("#postCntSpan").text(cnt);
-        }
-    });
-    */
     // 검색 input에 대한 포커스
     $('#searchInfo').focus(function(){
         $(this).css('text-align', 'left');
