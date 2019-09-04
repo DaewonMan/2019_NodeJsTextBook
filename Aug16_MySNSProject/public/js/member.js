@@ -23,6 +23,7 @@ function logoutDo() {
 	}
 }
 
+/* 회원검색; 파라미터는 로그인한 아이디 */
 function searchIdEvent(loginId) {
 	var loginId2 = loginId;
 	
@@ -32,7 +33,7 @@ function searchIdEvent(loginId) {
 		var id = $("#searchInfo").val();
 
 		$.ajax({
-			url : "member.id.search",
+			url : "/user/id/search",
 			data : {
 				wm_id : id
 			},
@@ -66,7 +67,7 @@ function searchIdEvent(loginId) {
 							return true; // continue와 같음
 						}
 							
-						var aTag = $('<a></a>').attr('href','follow.wave?wm_id='+loginId1).attr('class', 'dvsATag');
+						var aTag = $('<a></a>').attr('href','/user/wave?wm_id='+ loginId1 + "&wave_id=" + loginId1).attr('class', 'dvsATag');//
 						var divisionTb = $('<table></table>').attr("class", "dvsTb");
 						if(i+1 < ok) {
 							divisionTb.css("border-bottom", "1px #E0E0E0 solid");
@@ -76,7 +77,7 @@ function searchIdEvent(loginId) {
 						var td1 = $('<td></td>').css('width', '45px');
 						var td2 = $('<td></td>');
 						
-						idImg = $('<img></img>').attr('class', 'searchIdImg').attr('src', 'resources/img/' + $(e).find("wm_img").text());
+						idImg = $('<img></img>').attr('class', 'searchIdImg').attr('src', $(e).find("wm_img").text());
 						td1.append(idImg);
 						
 						idSpan = $('<span></span>').attr("class", "searchIdSpan").text(loginId1);

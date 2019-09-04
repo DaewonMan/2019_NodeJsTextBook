@@ -1,7 +1,8 @@
 const express = require('express');
 
 const { isLoggedIn } = require('./middlewares');
-const { User, Post } = require('../models');
+const { User, Post, Sequelize } = require('../models');
+const Op = Sequelize.Op;
 
 const router = express.Router();
 
@@ -17,6 +18,7 @@ router.post('/:id/follow', isLoggedIn, async (req, res, next) => {
 });
 
 /* 파도타기 */
+// parameter : wm_id, wave_id
 router.get('/wave', async (req, res, next) => {
   //console.log(req.user);
   if(req.user) {
@@ -42,6 +44,28 @@ router.get('/wave', async (req, res, next) => {
       return res.redirect('/login');
   }
   
+});
+
+/* /user/id/search */
+/* 회원검색 */
+router.get('/id/search', isLoggedIn, async (req, res, next) => {
+  try {
+    const exUser = await User.findAll({ where: { wm_id: { [Op.like]: "%" + req.query.wm_id + "%" } } });
+
+    var xmlResult = '<?xml version="1.0" encoding="UTF-8"?>' ;
+    xmlResult += '<members>';
+    for (var i = 0;i < exUser.length;i++) {
+        xmlResult += '<member><wm_id>' + exUser[i].wm_id + '</wm_id>';
+        xmlResult += '<wm_name>' + exUser[i].wm_name + '</wm_name>';
+        xmlResult += '<wm_img>' + exUser[i].wm_img + '</wm_img></member>';
+    }
+    xmlResult += '</members>';
+
+    return res.json(xmlResult);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
 });
 
 module.exports = router;

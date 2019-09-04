@@ -1,6 +1,6 @@
 $(function(){
-    var myId = '${loginMember.wm_id }';
-    var yourId = '${waveMember.wm_id }';
+    var myId = $("mainUserID").val();
+    var yourId = $("mainWaveId").val();
     var waverOpen = "${waveMember.wm_open}";
     var firstLoc = 0;
     
@@ -78,7 +78,7 @@ $(function(){
     });
     
     // 검색 내용 출력
-    //searchIdEvent(myId);
+    searchIdEvent(myId);
     
     // 팔로워 수
     //followerCnt(yourId);
