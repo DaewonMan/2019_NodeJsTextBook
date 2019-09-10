@@ -12,6 +12,8 @@ block memberTitle
                         td
                             if user.wm_id != waveUser.wm_id
                                 button#followBnt 팔로우
+                            else
+                                button#postOpen 전체공개
                     tr
                         td= "게시물: " + post.length 
                             span#postCntSpan

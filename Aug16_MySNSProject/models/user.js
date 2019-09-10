@@ -33,6 +33,11 @@ module.exports = (sequelize, DataTypes) => (
         type: DataTypes.STRING(200),
         allowNull: true,
       },
+      wm_open: {
+        type: DataTypes.INTEGER(2),
+        allowNull: false,
+        defaultValue: 1,
+      },
       provider: {
         type: DataTypes.STRING(10),
         allowNull: false,

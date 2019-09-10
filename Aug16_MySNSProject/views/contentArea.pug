@@ -2,7 +2,12 @@ extends memberTitle
 
 block contentArea
     #homeBd
-        if post.length == 0
+        if waveUser.wm_open == -1 && user.wm_id != waveUser.wm_id
+            div#noPostDiv
+                img(src="/img/wonsta.jpg")
+                br
+                span 비공개
+        else if post.length == 0
             div#noPostDiv
                 img(src="/img/wonsta.jpg")
                 br

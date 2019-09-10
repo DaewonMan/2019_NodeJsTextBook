@@ -1,7 +1,7 @@
 $(function(){
     var myId = $("mainUserID").val();
-    var yourId = $("mainWaveId").val();
-    var waverOpen = "${waveMember.wm_open}";
+    var yourId = $("mainWaveID").val();
+    var waverOpen = $("#mainWaverOpen").val();
     var firstLoc = 0;
     
     var mainImg = $("<img></img>").attr("src", "/img/wonsta.jpg").css("width", "35px");
@@ -79,18 +79,6 @@ $(function(){
     
     // 검색 내용 출력
     searchIdEvent(myId);
-    
-    // 팔로워 수
-    //followerCnt(yourId);
-    
-    // 팔로우 수
-    //followCnt(yourId);
-    
-    // 팔로워 수 클릭 시
-    //searchFollowerEvent(yourId, myId);
-    
-    // 팔로우 수 클릭 시
-    //searchFollowEvent(yourId, myId);
     
     // 다른 멤버의  게시물 페이지로 갔을 때 공개 여부에 따른 화면 표시
     //if(yourId != myId && waverOpen == 'close') {

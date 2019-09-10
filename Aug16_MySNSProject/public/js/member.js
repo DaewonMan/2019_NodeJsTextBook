@@ -134,27 +134,6 @@ function connectIdCheckEvent() {
 	});
 }
 
-/*
-async function connectIdCheckEvent() {
-	// id 중복검사
-	$("#joinID").keyup(function(e) {
-        //alert('aaaaaaaaaa');
-        var wm_id = $("#joinID").val();
-		
-    	if (wm_id == "") {
-			// id를 안썼을 때
-			$("#joinIDResult").text("ID 입력");
-			alert('dfsfddsfs');
-		} else if (exUser) {
-			$("#joinIDResult").text("ID 중복");
-		} else {
-			$("#joinIDResult").text("OK");
-		}
-		
-	});
-}
-*/
-
 function joinCheck() {
 	var idField = document.joinForm.wm_id;
 	var pwField = document.joinForm.wm_pw;

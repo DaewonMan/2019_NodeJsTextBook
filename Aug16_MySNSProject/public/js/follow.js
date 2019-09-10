@@ -1,24 +1,308 @@
+// ÌåîÎ°úÏö∞ÌïòÍ∏∞
+function followDo(id, me) {
+	var ok = confirm(id +"ÎãòÏùÑ ÌåîÎ°úÏûâ Ìï†ÍπåÏöî?");
+		
+	if(ok) {
+		$.ajax({
+			url: "/user/insert/follower",
+			type:"post",
+			data: {wf_id: id, wf_follower: me},
+			success: function(result){
+				if(result == "OK") {
+					alert(id + "ÎãòÏùÑ ÌåîÎ°úÏö∞ ÌïòÏòÄÏäµÎãàÎã§!!!");
+					$("#followBnt").attr("id", "").attr("id", "followingBnt").text("ÌåîÎ°úÏûâ");
+					$("#followingBnt").text("ÌåîÎ°úÏûâ");
+					followerCnt(id); // ÌåîÎ°úÏõåÏàò ÏóÖÎéÉ
+				}
+			}
+		});
+	}
+}
+
+function unfollowDo(id, me) {
+	var ok = confirm(id +"ÎãòÏùÑ Ïñ∏Ìåî Ìï†ÍπåÏöî?");
+	
+	if(ok) {
+		$.ajax({
+			url: "/user/delete/follower",
+			data: {wf_id: id, wf_follower: me},
+			success: function(result){
+				if(result == "OK") {
+					alert(id + "ÎãòÏùÑ Ïñ∏ÌåîÌïòÏòÄÏäµÎãàÎã§!!!");
+					$("#followBnt").text("ÌåîÎ°úÏö∞");
+					$("#followingBnt").attr("id", "").attr("id", "followBnt").text("ÌåîÎ°úÏö∞");
+					followerCnt(id);
+				}
+			}
+		});
+	}
+}
+
+// ÌåîÎ°úÏõåÏàò ÏÑ∏Í∏∞
+function followerCnt(yId){
+	$.ajax({
+		url: "/user/follower/cnt",
+		data: {wf_id: yId},
+		success: function(xml){
+			var cnt = $(xml).find("follow").length;
+			$('#followerCntSpan').text(cnt);
+		}
+	});
+}
+// ÌåîÎ°úÏûâÏàò ÏÑ∏Í∏∞
+function followCnt(yId){
+	$.ajax({
+		url: "/user/following/cnt",
+		data: {wf_follower: yId},
+		success: function(xml){
+			var cnt = $(xml).find("follow").length;
+			$('#followCntSpan').text(cnt);
+		}
+	});
+}
+
+function followBtnOper(yourId, myId, yesOrNo, waverOpen) {
+		
+    if(yesOrNo == "ÌåîÎ°úÏö∞") {
+        // ÎπÑÍ≥µÍ∞úÎ©¥ ÏäπÏù∏Î∞õÏïÑÏïºÌï®
+        if(waverOpen == -1) {
+            followWait(yourId, myId);
+        } else {
+            followDo(yourId, myId);
+        }
+    } else if(yesOrNo == "ÏäπÏù∏Ï§ë") {
+        unFollowWaitDo(yourId, myId);
+    } else {
+        unfollowDo(yourId, myId);
+    }
+    
+    // ÌåîÎ°úÏö∞, ÌåîÎ°úÏûâ Î≤ÑÌäº ÎàÑÎ•º Ïãú Í≥µÍ∞úÏó¨Î∂Ä Ï¶âÍ∞Å Î∞òÏùë
+    //if(waverOpen == 'close') {
+        //followOrNot2(yourId, myId);
+    //}
+}
+
+// ÌåîÎ°úÏö∞ Ïó¨Î∂Ä ÌôïÏù∏
+function followOrNot(id, me){
+	$.ajax({
+		url: "/user/follow/ornot",
+		data: {wf_id: id, wf_follower: me},
+		success: function(xml){
+			var cnt = $(xml).find("follow").length;
+			if(cnt > 0) {
+				$("#followBnt").attr("id", "").attr("id", "followingBnt").text("ÌåîÎ°úÏûâ");
+			}
+		}
+	});
+}
+
+// ÌåîÎ°úÏõå Î™©Î°ù Î≥¥Í∏∞
+function searchFollowerEvent(yId, meId) {
+	$("#followerTd").click(function() {
+		$.ajax({
+			url : "/user/follower/cnt",
+			data : {
+				wf_id : yId
+			},
+			success : function(xml) {
+				var ok = $(xml).find("follow").length;
+				
+				$('#searchFollowerDiv').remove();
+				$('#followDiv').remove();
+				$('#closeDiv').remove();
+				var displayDiv = $('<div></div>');
+				var followDiv = $('<div></div>');
+				var closeDiv = $('<div></div>').attr("id","closeDiv");
+	
+				if (ok >= 1) {
+					displayDiv.attr("id","searchFollowerDiv");
+					followDiv.attr("id","followDiv");
+					
+					var idSpan;
+					var nameSpan;
+					
+					$(xml).find("follow").each(function(i, e){
+
+						var followerId = $(e).find('wm_id').text();
+						var followerImg = "";
+						var followerName = "";
+						
+						followerImg = $(e).find('wm_img').text();
+						followerName = $(e).find('wm_name').text();									
+									
+						var aTag = $('<a></a>').attr('class', 'dvsATag');
+						if(followerId == meId) {
+							aTag.attr('href','/');
+						} else {
+							aTag.attr('href','/user/wave?wave_id='+followerId);
+						}
+								
+						var followTb = $('<table></table>').attr("class", "followTb");
+								
+						followTb.css("border-bottom", "1px #E0E0E0 solid");
+					
+						var tr = $('<tr></tr>');
+						var td1 = $('<td></td>').css('width', '45px');
+						var td2 = $('<td></td>');				
+									
+						idImg = $('<img></img>').attr('class', 'searchIdImg').attr('src', followerImg);
+						td1.append(idImg);
+									
+						idSpan = $('<span></span>').attr("class", "searchIdSpan").text(followerId);
+						nameSpan = $('<span></span>').attr("class", "searchIdNameSpan").text(followerName);
+						td2.append(idSpan, '<br>', nameSpan);
+									
+						tr.append(td1, td2);
+						followTb.append(tr);
+						aTag.append(followTb)
+									
+						followDiv.append(aTag);
+						displayDiv.append(followDiv)
+					});
+					
+				} else {
+					displayDiv.attr("id","searchFollowerDiv");
+					
+					var noIdDiv = $("<div></div>").attr('class','noFollowDiv').text("ÏïÑÎ¨¥ÎèÑ ÏóÜÏñ¥Ïö©..");
+					
+					displayDiv.append(noIdDiv);
+				}
+				closeDiv.text('x');
+				displayDiv.append(closeDiv);
+				
+				$('#loBd').append(displayDiv);
+				
+				// Îã´Í∏∞ Î≤ÑÌäº
+				$('#closeDiv').click(function(){
+					$('#searchFollowerDiv').hide();
+				});
+			}
+		});
+	});
+}
+
+//ÌåîÎ°úÏûâ Ïàò Î≥¥Í∏∞
+function searchFollowEvent(yId, meId) {
+	$("#followTd").click(function() {
+		$.ajax({
+			url : "/user/following/cnt",
+			data : {
+				wf_follower : yId
+			},
+			success : function(xml) {
+				var ok = $(xml).find("follow").length;
+				
+				$('#searchFollowerDiv').remove();
+				$('#followDiv').remove();
+				$('#closeDiv').remove();
+				var displayDiv = $('<div></div>');
+				var followDiv = $('<div></div>');
+				var closeDiv = $('<div></div>').attr("id","closeDiv");
+	
+				if (ok >= 1) {
+					displayDiv.attr("id","searchFollowerDiv");
+					followDiv.attr("id","followDiv");
+					
+					var idSpan;
+					var nameSpan;
+					var imgSpan;
+					
+					$(xml).find("follow").each(function(i, e){
+						var followId = $(e).find('wm_id').text();
+						var followImg = "";
+						var followName = "";
+
+						followImg = $(e).find('wm_img').text();
+						followName = $(e).find('wm_name').text();									
+									
+						var aTag = $('<a></a>').attr('class', 'dvsATag');
+						if(followId == meId) {
+							aTag.attr('href','/');
+						} else {
+							aTag.attr('href','/user/wave?wave_id='+followId);
+						}
+						var followTb = $('<table></table>').attr("class", "followTb");
+								
+						followTb.css("border-bottom", "1px #E0E0E0 solid");
+					
+						var tr = $('<tr></tr>');
+						var td1 = $('<td></td>').css('width', '45px');
+						var td2 = $('<td></td>');				
+									
+						idImg = $('<img></img>').attr('class', 'searchIdImg').attr('src', followImg);
+						td1.append(idImg);
+									
+						idSpan = $('<span></span>').attr("class", "searchIdSpan").text(followId);
+						nameSpan = $('<span></span>').attr("class", "searchIdNameSpan").text(followName);
+						td2.append(idSpan, '<br>', nameSpan);
+									
+						tr.append(td1, td2);
+						followTb.append(tr);
+						aTag.append(followTb)
+									
+						followDiv.append(aTag);	
+						displayDiv.append(followDiv)
+					});
+					
+				} else {
+					displayDiv.attr("id","searchFollowerDiv");
+					
+					var noIdDiv = $("<div></div>").attr('class','noFollowDiv').text("ÏïÑÎ¨¥ÎèÑ ÏóÜÏñ¥Ïö©..");
+					
+					displayDiv.append(noIdDiv);
+				}
+				closeDiv.text('x');
+				displayDiv.append(closeDiv);
+				
+				$('#loBd').append(displayDiv);
+				
+				// Îã´Í∏∞ Î≤ÑÌäº
+				$('#closeDiv').click(function(){
+					$('#searchFollowerDiv').hide();
+				});
+			}
+		});
+		
+	});
+}
+/********************************************************* */
+//ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ
+function followWaitOrNot(id, me){
+	$.ajax({
+		url: "followWait.ornot",
+		data: {wfw_id: id, wfw_follower: me},
+		success: function(xml){
+			var cnt = $(xml).find("waiter").length;
+			if(cnt > 0) {
+				$("#followBnt").attr("id", "").attr("id", "followWaitBnt").text("ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ");
+			}
+			
+			//return cnt;
+		}
+	});
+}
+
 function waiterAccept(me, you) {
 	//alert(me);
-	// ∆»∑ŒøÏ«œ±‚
+	// ÔøΩ»∑ŒøÔøΩÔøΩœ±ÔøΩ
 	$.ajax({
 		url: "insert.follower",
 		type:"post",
 		data: {wf_id: me, wf_follower: you},
 		success: function(result){
 			if(result == "OK") {
-				followerCnt(me); // ∆»∑Œøˆ ºˆ æ˜µ´
+				followerCnt(me); // ÔøΩ»∑ŒøÔøΩ ÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ
 			}
 		}
 	});
-	// waiter ∏Ò∑œ ¡ˆøÏ±‚
+	// waiter ÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩ
 	$.ajax({
 		url: "delete.waiter",
 		type:"post",
 		data: {wfw_id: me, wfw_follower: you},
 		success: function(result){
 			if(result == "OK") {
-				$("#waiterTb_"+you).remove(); // Ω¬¿Œ √Îº“«— waiter ªË¡¶
+				$("#waiterTb_"+you).remove(); // ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩ waiter ÔøΩÔøΩÔøΩÔøΩ
 			}
 		}
 	});
@@ -26,21 +310,21 @@ function waiterAccept(me, you) {
 
 function waiterAcceptCancel(me, you) {
 	//alert(me);
-	// waiter ∏Ò∑œ ¡ˆøÏ±‚
+	// waiter ÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩ
 	$.ajax({
 		url: "delete.waiter",
 		type:"post",
 		data: {wfw_id: me, wfw_follower: you},
 		success: function(result){
 			if(result == "OK") {
-				$("#waiterTb_"+you).remove(); // Ω¬¿Œ √Îº“«— waiter ªË¡¶
+				$("#waiterTb_"+you).remove(); // ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩ waiter ÔøΩÔøΩÔøΩÔøΩ
 			}
 		}
 	});
 }
 
 function waitersForFollow(me) {
-	// follower ¡∂»∏
+	// follower ÔøΩÔøΩ»∏
 	$("#alarmWaiter").click(function() {
 		$.ajax({
 			url: "count.waitforme",
@@ -71,7 +355,7 @@ function waitersForFollow(me) {
 						var followerImg = "";
 						var followerName = "";
 						
-						// id∑Œ »∏ø¯¡§∫∏∏¶ ∞°¡Æø¿¥¬ æ∆¿€Ω∫
+						// idÔøΩÔøΩ »∏ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩ€ΩÔøΩ
 						$.ajax({
 							url : "member.id.check",
 							data : {
@@ -102,8 +386,8 @@ function waitersForFollow(me) {
 								nameSpan = $('<span></span>').attr("class", "searchIdNameSpan").text(followerName);
 								td2.append(idSpan, '<br>', nameSpan);
 								
-								okBnt = $('<button></button>').attr("class", "followOkBnt").attr("onclick", "waiterAccept(\'" + me + "\',\'" + followerId + "\');").text("»Æ¿Œ");
-								delBnt = $('<button></button>').attr("class", "followDelBnt").attr("onclick", "waiterAcceptCancel(\'" + me + "\',\'" + followerId + "\');").text("√Îº“");
+								okBnt = $('<button></button>').attr("class", "followOkBnt").attr("onclick", "waiterAccept(\'" + me + "\',\'" + followerId + "\');").text("»ÆÔøΩÔøΩ");
+								delBnt = $('<button></button>').attr("class", "followDelBnt").attr("onclick", "waiterAcceptCancel(\'" + me + "\',\'" + followerId + "\');").text("ÔøΩÔøΩÔøΩ");
 								td3.append(okBnt, delBnt);
 								
 								tr.append(td1, td2, td3);
@@ -120,7 +404,7 @@ function waitersForFollow(me) {
 				} else {
 					displayDiv.attr("id","searchWaiterDiv");
 					
-					var noIdDiv = $("<div></div>").attr('class','noWaiterDiv').text("æ∆π´µµ æ¯Ω¿¥œ¥Ÿ.");
+					var noIdDiv = $("<div></div>").attr('class','noWaiterDiv').text("ÔøΩ∆πÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩœ¥ÔøΩ.");
 					
 					displayDiv.append(noIdDiv);
 				}
@@ -129,12 +413,12 @@ function waitersForFollow(me) {
 				
 				$('#loBd').append(displayDiv);
 				
-				// ¥›±‚ πˆ∆∞ ¥©∏¶ Ω√
+				// ÔøΩ›±ÔøΩ ÔøΩÔøΩ∆∞ ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩ
 				$('#closeDiv').click(function(){
 					//$('#closeDiv').remove();
 					//$('#followDiv').remove();
 					$('#searchWaiterDiv').hide();
-					countWaitForMe(me); // ∆»∑ŒøÏ Ω≈√ª«— ªÁ∂˜ ¿÷¿ª∂ß ≥™≈∏≥™¥¬ ¿”∆º ¡∏¿Á ø©∫Œ
+					countWaitForMe(me); // ÔøΩ»∑ŒøÔøΩ ÔøΩÔøΩ√ªÔøΩÔøΩ ÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩ≈∏ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩ∆º ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ
 				});
 			}
 		});
@@ -167,86 +451,8 @@ function countWaitForMe(me) {
 	});
 }
 
-
-function followerCnt(yId){
-	$.ajax({
-		url: "follower.cnt",
-		data: {wf_id: yId},
-		success: function(xml){
-			var cnt = $(xml).find("follow").length;
-			$('#followerCntSpan').text(cnt);
-		}
-	});
-}
-
-function followCnt(yId){
-	$.ajax({
-		url: "follow.cnt",
-		data: {wf_follower: yId},
-		success: function(xml){
-			var cnt = $(xml).find("follow").length;
-			$('#followCntSpan').text(cnt);
-		}
-	});
-}
-
-function followDo(id, me) {
-var ok = confirm(id +"¥‘¿ª ∆»∑ŒøÏ «’¥œ±Ó?");
-	
-	if(ok) {
-		$.ajax({
-			url: "insert.follower",
-			type:"post",
-			data: {wf_id: id, wf_follower: me},
-			success: function(result){
-				if(result == "OK") {
-					alert(id + "¥‘¿ª ∆»∑ŒøÏ «ﬂΩ¿¥œ¥Ÿ!!!");
-					$("#followBnt").attr("id", "").attr("id", "followingBnt").text("∆»∑Œ¿◊");
-					$("#followingBnt").text("∆»∑Œ¿◊");
-					followerCnt(id); // ∆»∑Œøˆ ºˆ æ˜µ´
-				}
-			}
-		});
-	}
-}
-
-function unfollowDo(id, me) {
-	var ok = confirm(id +"¥‘¿ª æ∆»∑ŒøÏ «’¥œ±Ó?");
-	
-	if(ok) {
-		//href.location = "insert.follower";
-		$.ajax({
-			url: "delete.follower",
-			type:"post",
-			data: {wf_id: id, wf_follower: me},
-			success: function(result){
-				if(result == "OK") {
-					alert(id + "¥‘¿ª æ∆»∑ŒøÏ «ﬂΩ¿¥œ¥Ÿ!!!");
-					$("#followBnt").text("∆»∑ŒøÏ");
-					$("#followingBnt").attr("id", "").attr("id", "followBnt").text("∆»∑ŒøÏ");
-					followerCnt(id); // ∆»∑Œøˆ ºˆ æ˜µ´
-				}
-			}
-		});
-	}
-}
-
-// ∆»∑ŒøÏ «ﬂ¥¬¡ˆ ø©∫Œ
-function followOrNot(id, me){
-	$.ajax({
-		url: "follow.ornot",
-		data: {wf_id: id, wf_follower: me},
-		success: function(xml){
-			var cnt = $(xml).find("follow").length;
-			if(cnt > 0) {
-				$("#followBnt").attr("id", "").attr("id", "followingBnt").text("∆»∑Œ¿◊");
-			}
-		}
-	});
-}
-
 function followWait(id, me) {
-	var ok = confirm(id +"¥‘¿ª ∆»∑ŒøÏ «’¥œ±Ó?");
+	var ok = confirm(id +"ÔøΩÔøΩÔøΩÔøΩ ÔøΩ»∑ŒøÔøΩ ÔøΩ’¥œ±ÔøΩ?");
 	
 	if(ok) {
 		$.ajax({
@@ -255,9 +461,9 @@ function followWait(id, me) {
 			data: {wfw_id: id, wfw_follower: me},
 			success: function(result){
 				if(result == "OK") {
-					alert(id + "¥‘¿Ã Ω¬¿Œ«“ ∂ß±Ó¡ˆ ±‚¥Ÿ∏Æººø‰...");
-					$("#followBnt").attr("id", "").attr("id", "followWaitBnt").text("Ω¬¿Œ¡ﬂ");
-					$("#followingBnt").attr("id", "").attr("id", "followWaitBnt").text("Ω¬¿Œ¡ﬂ");
+					alert(id + "ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩŸ∏ÔøΩÔøΩÔøΩÔøΩÔøΩ...");
+					$("#followBnt").attr("id", "").attr("id", "followWaitBnt").text("ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ");
+					$("#followingBnt").attr("id", "").attr("id", "followWaitBnt").text("ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ");
 				}
 			}
 		});
@@ -265,7 +471,7 @@ function followWait(id, me) {
 }
 
 function unFollowWaitDo(id, me) {
-	var ok = confirm("Ω¬¿Œ √Îº“ «’¥œ±Ó?");
+	var ok = confirm("ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩ ÔøΩ’¥œ±ÔøΩ?");
 	
 	if(ok) {
 		$.ajax({
@@ -274,229 +480,11 @@ function unFollowWaitDo(id, me) {
 			data: {wfw_id: id, wfw_follower: me},
 			success: function(result){
 				if(result == "OK") {
-					alert("Ω¬¿Œ √Îº“ «ﬂΩ¿¥œ¥Ÿ!!");
-					$("#followWaitBnt").attr("id", "").attr("id", "followBnt").text("∆»∑ŒøÏ");
-					$("#followBnt").text("∆»∑ŒøÏ");
+					alert("ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩ ÔøΩﬂΩÔøΩÔøΩœ¥ÔøΩ!!");
+					$("#followWaitBnt").attr("id", "").attr("id", "followBnt").text("ÔøΩ»∑ŒøÔøΩ");
+					$("#followBnt").text("ÔøΩ»∑ŒøÔøΩ");
 				}
 			}
 		});
 	}
-}
-
-//Ω¬¿Œ¡ﬂ¿Œ¡ˆ ø©∫Œ
-function followWaitOrNot(id, me){
-	$.ajax({
-		url: "followWait.ornot",
-		data: {wfw_id: id, wfw_follower: me},
-		success: function(xml){
-			var cnt = $(xml).find("waiter").length;
-			if(cnt > 0) {
-				$("#followBnt").attr("id", "").attr("id", "followWaitBnt").text("Ω¬¿Œ¡ﬂ");
-			}
-			
-			//return cnt;
-		}
-	});
-}
-
-
-// ∆»∑Œøˆ ºˆ ¥≠∑∂¿ª ∂ß ∏Ò∑œ
-function searchFollowerEvent(yId, meId) {
-	
-	// follower ¡∂»∏
-	$("#followerTd").click(function() {
-		$.ajax({
-			url : "follower.cnt",
-			data : {
-				wf_id : yId
-			},
-			success : function(xml) {
-				var ok = $(xml).find("follow").length;
-				
-				$('#searchFollowerDiv').remove();
-				$('#followDiv').remove();
-				$('#closeDiv').remove();
-				var displayDiv = $('<div></div>');
-				var followDiv = $('<div></div>');
-				var closeDiv = $('<div></div>').attr("id","closeDiv");
-	
-				if (ok >= 1) {
-					displayDiv.attr("id","searchFollowerDiv");
-					followDiv.attr("id","followDiv");
-					
-					var idSpan;
-					var nameSpan;
-					var imgSpan;
-					
-					$(xml).find("follow").each(function(i, e){
-						var followerId = $(e).find('wf_follower').text();
-						var followerImg = "";
-						var followerName = "";
-						
-						// id∑Œ »∏ø¯¡§∫∏∏¶ ∞°¡Æø¿¥¬ æ∆¿€Ω∫
-						$.ajax({
-							url : "member.id.check",
-							data : {
-								wm_id : followerId
-							},
-							success : function(xml2) {
-								var fm = $(xml2).find('member');
-								followerImg = fm.find('wm_img').text();
-								followerName = fm.find('wm_name').text();									
-									
-								var aTag = $('<a></a>').attr('class', 'dvsATag');
-								if(followerId == meId) {
-									aTag.attr('href','home.go');
-								} else {
-									aTag.attr('href','follow.wave?wm_id='+followerId);
-								}
-								
-								var followTb = $('<table></table>').attr("class", "followTb");
-								
-								followTb.css("border-bottom", "1px #E0E0E0 solid");
-					
-								var tr = $('<tr></tr>');
-								var td1 = $('<td></td>').css('width', '45px');
-								var td2 = $('<td></td>');				
-									
-								idImg = $('<img></img>').attr('class', 'searchIdImg').attr('src', 'resources/img/' + followerImg);
-								td1.append(idImg);
-									
-								idSpan = $('<span></span>').attr("class", "searchIdSpan").text(followerId);
-								nameSpan = $('<span></span>').attr("class", "searchIdNameSpan").text(followerName);
-								td2.append(idSpan, '<br>', nameSpan);
-									
-								tr.append(td1, td2);
-								followTb.append(tr);
-								aTag.append(followTb)
-									
-								followDiv.append(aTag);
-							}
-						});
-							
-						displayDiv.append(followDiv)
-					});
-					
-				} else {
-					displayDiv.attr("id","searchFollowerDiv");
-					
-					var noIdDiv = $("<div></div>").attr('class','noFollowDiv').text("æ∆π´µµ æ¯Ω¿¥œ¥Ÿ.");
-					
-					displayDiv.append(noIdDiv);
-				}
-				closeDiv.text('x');
-				displayDiv.append(closeDiv);
-				
-				$('#loBd').append(displayDiv);
-				
-				// ¥›±‚ πˆ∆∞ ¥©∏¶ Ω√
-				$('#closeDiv').click(function(){
-					//$('#closeDiv').remove();
-					//$('#followDiv').remove();
-					$('#searchFollowerDiv').hide();
-				});
-			}
-		});
-		
-	});
-}
-
-//∆»∑ŒøÏ ºˆ ¥≠∑∂¿ª ∂ß ∏Ò∑œ
-function searchFollowEvent(yId, meId) {
-	
-	// follower ¡∂»∏
-	$("#followTd").click(function() {
-		$.ajax({
-			url : "follow.cnt",
-			data : {
-				wf_follower : yId
-			},
-			success : function(xml) {
-				var ok = $(xml).find("follow").length;
-				
-				$('#searchFollowerDiv').remove();
-				$('#followDiv').remove();
-				$('#closeDiv').remove();
-				var displayDiv = $('<div></div>');
-				var followDiv = $('<div></div>');
-				var closeDiv = $('<div></div>').attr("id","closeDiv");
-	
-				if (ok >= 1) {
-					displayDiv.attr("id","searchFollowerDiv");
-					followDiv.attr("id","followDiv");
-					
-					var idSpan;
-					var nameSpan;
-					var imgSpan;
-					
-					$(xml).find("follow").each(function(i, e){
-						var followId = $(e).find('wf_id').text();
-						var followImg = "";
-						var followName = "";
-						
-						// id∑Œ »∏ø¯¡§∫∏∏¶ ∞°¡Æø¿¥¬ æ∆¿€Ω∫
-						$.ajax({
-							url : "member.id.check",
-							data : {
-								wm_id : followId
-							},
-							success : function(xml2) {
-								var fm = $(xml2).find('member');
-								followImg = fm.find('wm_img').text();
-								followName = fm.find('wm_name').text();									
-									
-								var aTag = $('<a></a>').attr('class', 'dvsATag');
-								if(followId == meId) {
-									aTag.attr('href','home.go');
-								} else {
-									aTag.attr('href','follow.wave?wm_id='+followId);
-								}
-								var followTb = $('<table></table>').attr("class", "followTb");
-								
-								followTb.css("border-bottom", "1px #E0E0E0 solid");
-					
-								var tr = $('<tr></tr>');
-								var td1 = $('<td></td>').css('width', '45px');
-								var td2 = $('<td></td>');				
-									
-								idImg = $('<img></img>').attr('class', 'searchIdImg').attr('src', 'resources/img/' + followImg);
-								td1.append(idImg);
-									
-								idSpan = $('<span></span>').attr("class", "searchIdSpan").text(followId);
-								nameSpan = $('<span></span>').attr("class", "searchIdNameSpan").text(followName);
-								td2.append(idSpan, '<br>', nameSpan);
-									
-								tr.append(td1, td2);
-								followTb.append(tr);
-								aTag.append(followTb)
-									
-								followDiv.append(aTag);
-							}
-						});
-							
-						displayDiv.append(followDiv)
-					});
-					
-				} else {
-					displayDiv.attr("id","searchFollowerDiv");
-					
-					var noIdDiv = $("<div></div>").attr('class','noFollowDiv').text("æ∆π´µµ æ¯Ω¿¥œ¥Ÿ.");
-					
-					displayDiv.append(noIdDiv);
-				}
-				closeDiv.text('x');
-				displayDiv.append(closeDiv);
-				
-				$('#loBd').append(displayDiv);
-				
-				// ¥›±‚ πˆ∆∞ ¥©∏¶ Ω√
-				$('#closeDiv').click(function(){
-					//$('#closeDiv').remove();
-					//$('#followDiv').remove();
-					$('#searchFollowerDiv').hide();
-				});
-			}
-		});
-		
-	});
 }

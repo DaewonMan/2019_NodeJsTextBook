@@ -46,9 +46,9 @@ $(function(){
     var id = $('#repleIdArea').val(); // user.wm_id, 사용자 아이디
     
     // 게시물 눌렀을 때 좋아요 갯수; likeCnt는 0이 들어감
-    likeUpdate(pno, likeCnt, id);
- 
-    /*============================================================*/
+    if(typeof(pno) != "undefined" && typeof(id) != "undefined") {
+        likeUpdate(pno, likeCnt, id);
+    }
     
     // 댓글 추가하기
     $("#repleArea").keyup(function(e){
@@ -97,14 +97,7 @@ $(function(){
             });
         }
     });
-    // 게시물 삭제 이미지
-    $("#trashImg").mouseenter(function(){
-        $(this).attr("src","/img/trash2.png");
-    });
-    $("#trashImg").mouseleave(function(){
-        $(this).attr("src","/img/trash1.jpg");			
-    });
-    
+
     // 좋아요 버튼
     $(".likeBtn").click(function(){
         var hrt = $(this).text();
@@ -124,5 +117,17 @@ $(function(){
     $(".likeBtn").mouseup(function(){
         $(this).css("font-size", "30pt");
     });
+
+    /*============================================================*/
+
+    // 게시물 삭제 이미지
+    $("#trashImg").mouseenter(function(){
+        $(this).attr("src","/img/trash2.png");
+    });
+    $("#trashImg").mouseleave(function(){
+        $(this).attr("src","/img/trash1.jpg");			
+    });
+    
+    
     
 });

@@ -15,6 +15,7 @@ db.Post = require('./post')(sequelize, Sequelize);
 db.Hashtag = require('./hashtag')(sequelize, Sequelize);
 db.Reple = require('./reple')(sequelize, Sequelize);
 db.Likebool = require('./likebool')(sequelize, Sequelize);
+db.Follow = require('./follow')(sequelize, Sequelize);
 
 db.User.hasMany(db.Post);
 db.Post.belongsTo(db.User);
