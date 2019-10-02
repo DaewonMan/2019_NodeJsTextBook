@@ -1,3 +1,48 @@
+function join() {
+	// ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ßºï¿½ï¿½Ë»ï¿½
+	$('#j_id').keyup(function(e){
+		var j_id = $("#j_id").val();
+
+		$.ajax({
+			url: "/member/join/check",
+			data: {id: j_id}, 
+			success: function(result){
+				if(j_id == "") {
+					$("#idCheck").text("[IDì…ë ¥]").css("color", "black");
+				} else if(result == "NO") {
+					$("#idCheck").text("[IDì¤‘ë³µ]").css("color", "red");
+				} else {
+					$("#idCheck").text("[ì‚¬ìš©ê°€ëŠ¥]").css("color", "green");
+				}
+			}
+		});
+	});
+	
+	// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï±ï¿½
+	$('#j_submit').click(function(){
+		var j_id = $("#j_id").val();
+		var j_pw = $("#j_pw").val();
+		
+		$.ajax({
+			url: "/member/join/do",
+			data: {id: j_id, pw: j_pw}, 
+			success: function(result){
+				$("#j_id").val("");
+				$("#j_pw").val("");
+
+				if(result != "OK") {
+					alert("íšŒì›ê°€ì… ì‹¤íŒ¨ ã…œã… ");
+				} else {
+					alert(j_id + "ë‹˜ íšŒì›ê°€ì… ë˜ì…¨ì–´ìš©!!");
+					location.href = "#loginPage";
+				}
+				
+			}
+		});
+	});
+}
+
+ /*************************************************************************** */
 function login() {
 	$("#l_Submit").click(function(){
 		var l_id = $("#l_id").val();
@@ -6,65 +51,17 @@ function login() {
 		var url = "http://localhost:3000/login.do";
 		url += '?wtm_id=' + l_id;
 		url += '&wtm_pw=' + l_pw;
-		url += '&callback=?'; //callback=?´Â jquery¹®¹ı
+		url += '&callback=?'; //callback=?ï¿½ï¿½ jqueryï¿½ï¿½ï¿½ï¿½
 		
 		$.getJSON(url, function(json){
 			if(Object.keys(json).length == 0) {
-				// È¸¿øÁ¤º¸°¡ ¾øÀ¸¸é
-				alert("È¸¿øÁ¤º¸°¡ ¾ø½À´Ï´Ù!!");
+				// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+				alert("È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!!");
 				$("#l_id").val("");
 				$("#l_pw").val("");
 			} else {
 				location.href = "#mainPage";
 			}
 		});
-	});
-}
-
-function join() {
-	// ¾ÆÀÌµğ Áßº¹°Ë»ç
-	$('#j_id').keyup(function(e){
-		var j_id = $("#j_id").val();
-		
-		var url = "http://localhost:3000/join.check";
-		url += '?wtm_id=' + j_id;
-		url += '&callback=?'; //callback=?´Â jquery¹®¹ı
-				
-		$.getJSON(url, function(json){
-			//alert(Object.keys(json).length);
-			//alert(json._id.length);
-			if(j_id == "") {
-				$("#idCheck").text("[IDÀÔ·Â]").css("color", "black");
-			} else if(Object.keys(json).length == 1) {
-				// ¾ÆÀÌµğ Áßº¹
-				$("#idCheck").text("[»ç¿ëºÒ°¡]").css("color", "red");
-			} else {
-				// ¾ÆÀÌµğ »ç¿ë °¡´É
-				$("#idCheck").text("[»ç¿ë°¡´É]").css("color", "green");
-			}
-		});
-				
-	});
-	
-	// È¸¿ø°¡ÀÔ ÇÏ±â
-	$('#j_submit').click(function(){
-		var j_id = $("#j_id").val();
-		var j_pw = $("#j_pw").val();
-		
-		var url = "http://localhost:3000/join.do";
-		url += '?wtm_id=' + j_id;
-		url += '&wtm_pw=' + j_pw;
-		url += '&callback=?'; //callback=?´Â jquery¹®¹ı
-		
-		$.getJSON(url, function(json){
-			//alert(Object.keys(json).length);
-			//alert(json._id.length);
-		});
-		
-		$("#j_id").val("");
-		$("#j_pw").val("");
-		
-		alert(j_id + "´Ô È¯¿µÇÕ´Ï´Ù!!");
-		location.href = "#loginPage";
 	});
 }

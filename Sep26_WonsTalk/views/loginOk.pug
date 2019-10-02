@@ -1,0 +1,18 @@
+extends layout
+
+block content
+    div#mainPage(data-role="page")
+        div(data-role="header" data-position="fixed")
+            a(href="#loginPage" data-role="button" data-icon="arrow-l" data-transition="flow") 나가기
+            h1
+            a(href="#loginPage" data-role="button" data-icon="arrow-r" data-transition="flow") 로그아웃
+        div(data-role="content" align="center")
+            table#mainTb
+                tr
+                    td(align="center") ~님 반갑습니다
+                tr
+                    td(align="center") 내용~~~~~~~~~~
+                tr
+                    td 내용2~~~~~~~~~
+        div(data-role="footer" data-position="fixed")
+            h1 MADE BY DWM

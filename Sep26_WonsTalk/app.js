@@ -9,10 +9,11 @@ require('dotenv').config();
 
 const webSocket = require('./socket');
 const indexRouter = require('./routes');
-//const connect = require('./schemas');
+const memberRouter = require('./routes/member');
+const connect = require('./schemas');
 
 const app = express();
-//connect();
+connect();
 
 const sessionMiddleware = session({
   resave: false,
@@ -46,6 +47,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/', indexRouter);
+app.use('/member', memberRouter);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
