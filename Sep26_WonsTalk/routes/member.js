@@ -1,7 +1,9 @@
 const express = require('express');
 const multer = require('multer');
+const bcrypt = require('bcrypt');
 const path = require('path');
 const fs = require('fs');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 //onst Room = require('../schemas/room');
 //const Chat = require('../schemas/chat');
@@ -11,7 +13,7 @@ const router = express.Router();
 
 router.get('/join/check', async (req, res, next) => {
   try {
-    const userEx = await User.findOne({wst_id: req.body.id});
+    const userEx = await User.findOne({wst_id: req.query.id});
     //const exitUser = await User.findOne({});
     //var userEx;
     /*
@@ -35,15 +37,17 @@ router.get('/join/check', async (req, res, next) => {
   }
 });
 
-const upload = multer();
-router.get('/join/do', upload.none(), async (req, res, next) => {
+//const upload = multer();
+//router.get('/join/do', isNotLoggedIn, upload.none(), async (req, res, next) => {
+  router.get('/join/do', isNotLoggedIn, async (req, res, next) => {
     try {
-        const hash = await bcrypt.hash(req.body.pw, 12);
+        //const hash = await bcrypt.hash(req.body.pw, 12);
+        const hash = await bcrypt.hash(req.query.pw, 12);
         const user = new User({
-            wst_id: req.body.id,
+            wst_id: req.query.id,
             wst_password: hash,
           });
-          const newUser = await User.insert(user);
+          const newUser = await User.create(user);
 
           var userResult = "";
         if(newUser) {
@@ -78,7 +82,8 @@ router.get('/join/do', upload.none(), async (req, res, next) => {
     })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
   });
   
-  router.get('/logout', isLoggedIn, (req, res) => {
+  //router.get('/logout', isLoggedIn, (req, res) => {
+  router.get('/logout', (req, res) => {
     req.logout();
     req.session.destroy();
     res.redirect('/');

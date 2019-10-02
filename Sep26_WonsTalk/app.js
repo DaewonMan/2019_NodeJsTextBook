@@ -5,14 +5,17 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
 const ColorHash = require('color-hash');
+const passport = require('passport');
 require('dotenv').config();
 
 const webSocket = require('./socket');
 const indexRouter = require('./routes');
 const memberRouter = require('./routes/member');
 const connect = require('./schemas');
+const passportConfig = require('./passport');
 
 const app = express();
+passportConfig(passport); // passport 모듈 연결
 connect();
 
 const sessionMiddleware = session({
@@ -37,6 +40,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(sessionMiddleware);
 app.use(flash());
+app.use(passport.initialize()); // 요청객체에 passport설정 심기
+app.use(passport.session()); // req.session 객체에 passport정보 저장
 
 app.use((req, res, next) => {
   if (!req.session.color) {
