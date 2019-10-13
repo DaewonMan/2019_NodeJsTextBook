@@ -8,14 +8,32 @@ const fs = require('fs');
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
-  try {
-    //const rooms = await Room.find({});
-    res.render('login', { title: 'GIF 채팅방', error: req.flash('roomError') });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
+router.get('/', (req, res, next) => {
+    try {
+      /*
+      console.log('session info0 : ' + req.wst_id);
+      console.log('session info0 : ' + req.user);
+      console.log('session info : ' + req.session.id);
+      console.log('session info2 : ' + req.session.cookie.user);
+      */
+      if(req.user) {
+        res.render('loginOk', {
+          title: 'wonstalk',
+          twits: [],
+          user: req.user,
+          loginError: req.flash('loginError'),
+        });
+        req.flash('loginSuccess', '로그인 성공하였습니다.'); 
+      } else {
+        //const rooms = await Room.find({});
+        res.render('login', { title: 'GIF 채팅방', error: req.flash('roomError') });
+        //return res.redirect('/login');
+      }
+      
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
 });
 
 module.exports = router;

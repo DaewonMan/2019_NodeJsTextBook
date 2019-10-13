@@ -1,5 +1,5 @@
 function join() {
-	// ���̵� �ߺ��˻�
+	// id 중복검사
 	$('#j_id').keyup(function(e){
 		var j_id = $("#j_id").val();
 
@@ -18,7 +18,7 @@ function join() {
 		});
 	});
 	
-	// ȸ������ �ϱ�
+	// 회원가입 하기
 	$('#j_submit').click(function(){
 		var j_id = $("#j_id").val();
 		var j_pw = $("#j_pw").val();
@@ -43,25 +43,39 @@ function join() {
 }
 
  /*************************************************************************** */
+ /*
 function login() {
 	$("#l_Submit").click(function(){
+		alert("fffsfs");
 		var l_id = $("#l_id").val();
 		var l_pw = $("#l_pw").val();
 		
-		var url = "http://localhost:3000/login.do";
-		url += '?wtm_id=' + l_id;
-		url += '&wtm_pw=' + l_pw;
-		url += '&callback=?'; //callback=?�� jquery����
 		
-		$.getJSON(url, function(json){
-			if(Object.keys(json).length == 0) {
-				// ȸ�������� ������
-				alert("ȸ�������� �����ϴ�!!");
+		$.ajax({
+			url: "/member/login/do",
+			type: "POST",
+			data: {wst_id: l_id, wst_password: l_pw},
+			success: function(result){
+				
 				$("#l_id").val("");
 				$("#l_pw").val("");
-			} else {
-				location.href = "#mainPage";
+
+				if(result != "OK") {
+					alert("로그인 실패 ㅜㅠ");
+				}
+				
 			}
 		});
+	});
+}
+*/
+
+function logout() {
+	$("#logout").click(function(){
+		var ok = confirm("로그아웃 하시겠습니까?");
+
+		if(ok) {
+			location.href = "/member/logout";
+		}
 	});
 }

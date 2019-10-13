@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const multer = require('multer');
 const bcrypt = require('bcrypt');
 const path = require('path');
@@ -62,26 +63,35 @@ router.get('/join/check', async (req, res, next) => {
     }
   });
 
-  router.post('/login', (req, res, next) => {
+  router.post('/login/do', (req, res, next) => {
     passport.authenticate('local', (authError, user, info) => {
       if (authError) {
         console.error(authError);
         return next(authError);
       }
+      console.log('================M ROUTER USER ID : ' + user.wst_id);
       if (!user) {
+        console.log('There is no user!!');
         req.flash('loginError', info.message);
-        return res.redirect('/login');
+        //alert('fail...');
+        console.log('NOT USER!!');
+        return res.redirect('/');
       }
       return req.login(user, (loginError) => {
         if (loginError) {
+          console.log('ERRRRRRRRRRRRRRRRRRRRRR');
           console.error(loginError);
           return next(loginError);
         }
+        //alert('success...');
+        console.log('Success!!');
         return res.redirect('/');
+        //res.get('/');
+        //location.href = "/index/";
       });
     })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
   });
-  
+
   //router.get('/logout', isLoggedIn, (req, res) => {
   router.get('/logout', (req, res) => {
     req.logout();
