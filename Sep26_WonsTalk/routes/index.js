@@ -8,7 +8,7 @@ const fs = require('fs');
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
     try {
       /*
       console.log('session info0 : ' + req.wst_id);

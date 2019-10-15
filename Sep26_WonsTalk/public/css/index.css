@@ -22,3 +22,12 @@
 	margin-right: auto;
 	width: 90%;
 }
+
+#loginOkDivBtm{
+	width: 100%;
+	padding-bottom: 3%;
+}
+
+#loginOkDivBtm table{
+	width: 100%;
+}

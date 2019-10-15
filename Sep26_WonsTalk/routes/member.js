@@ -85,7 +85,10 @@ router.get('/join/check', async (req, res, next) => {
         }
         //alert('success...');
         console.log('Success!!');
-        return res.redirect('/');
+        //HTTP/1.1 302
+        //Location: http://localhost:8005/
+        return res.redirect(301, '/');
+        //res.send('/');
         //res.get('/');
         //location.href = "/index/";
       });
