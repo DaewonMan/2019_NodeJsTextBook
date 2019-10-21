@@ -5,6 +5,9 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+const sse = require('./sse');
+const webSocket = require('./socket');
+const checkAuction = require('./checkAuction');
 require('dotenv').config();
 
 const indexRouter = require('./routes/index');
@@ -15,6 +18,7 @@ const passportConfig = require('./passport');
 const app = express();
 sequelize.sync();
 passportConfig(passport);
+checkAuction();
 
 const sessionMiddleware = session({
   resave: false,
@@ -57,6 +61,9 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
-app.listen(app.get('port'), () => {
+const server = app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기중');
 });
+
+webSocket(server, app);
+sse(server);
